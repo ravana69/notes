@@ -15,6 +15,9 @@
             height: 200px;
             resize: vertical;
         }
+        .extension-input {
+            width: 60px;
+        }
         .save-button {
             margin-top: 10px;
             padding: 5px 10px;
@@ -30,16 +33,27 @@
     <div class="container">
         <h1>My Notes</h1>
         <textarea id="note-content"></textarea>
+        <input type="text" id="extension-input" class="extension-input" placeholder="Extension">
         <button class="save-button" onclick="saveNotes()">Save</button>
     </div>
 
     <script>
         function saveNotes() {
             const noteContent = document.getElementById('note-content').value;
-            const blob = new Blob([noteContent], { type: 'text/plain' });
+            const extensionInput = document.getElementById('extension-input').value.trim();
+
+            if (!extensionInput) {
+                alert("Please enter a valid file extension.");
+                return;
+            }
+
+            const mimeType = 'text/plain'; // You can modify this based on your requirements.
+            const fileName = `notes.${extensionInput}`;
+
+            const blob = new Blob([noteContent], { type: mimeType });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'notes.txt';
+            a.download = fileName;
             a.click();
             URL.revokeObjectURL(a.href);
         }
